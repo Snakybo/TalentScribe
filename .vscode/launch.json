@@ -5,13 +5,11 @@
 			"name": "Parse Classic talents",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "${workspaceFolder}/parse-talents.py",
+			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "TalentDataClassic.lua",
-				"--min-version", "11300",
-				"--max-version", "16000",
+				"--output", "ProviderClassic.lua",
 				"${input:rawTalentFile}",
 			]
 		},
@@ -19,13 +17,11 @@
 			"name": "Parse Forever talents",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "${workspaceFolder}/parse-talents.py",
+			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "TalentDataForever.lua",
-				"--min-version", "16000",
-				"--max-version", "20000",
+				"--output", "ProviderForever.lua",
 				"${input:rawTalentFile}",
 			]
 		},
@@ -33,13 +29,11 @@
 			"name": "Parse TBC talents",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "${workspaceFolder}/parse-talents.py",
+			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "TalentDataTBC.lua",
-				"--min-version", "20505",
-				"--max-version", "30000",
+				"--output", "ProviderTBC.lua",
 				"${input:rawTalentFile}",
 			]
 		},
@@ -47,13 +41,11 @@
 			"name": "Parse Wrath talents",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "${workspaceFolder}/parse-talents.py",
+			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "TalentDataWrath.lua",
-				"--min-version", "30400",
-				"--max-version", "40000",
+				"--output", "ProviderWrath.lua",
 				"${input:rawTalentFile}",
 			]
 		},
@@ -61,13 +53,11 @@
 			"name": "Parse Cata talents",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "${workspaceFolder}/parse-talents.py",
+			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "TalentDataCata.lua",
-				"--min-version", "40400",
-				"--max-version", "50000",
+				"--output", "ProviderCata.lua",
 				"${input:rawTalentFile}",
 			]
 		},
@@ -75,13 +65,11 @@
 			"name": "Parse Mists talents",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "${workspaceFolder}/parse-talents.py",
+			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "TalentDataMists.lua",
-				"--min-version", "50500",
-				"--max-version", "60000",
+				"--output", "ProviderMists.lua",
 				"${input:rawTalentFile}",
 			]
 		},
@@ -89,13 +77,11 @@
 			"name": "Parse Retail talents",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "${workspaceFolder}/parse-talents.py",
+			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "TalentDataRetail.lua",
-				"--min-version", "120000",
-				"--max-version", "130000",
+				"--output", "ProviderStandard.lua",
 				"${input:rawTalentFile}",
 			]
 		}
@@ -104,8 +90,8 @@
 		{
 			"id": "rawTalentFile",
 			"type": "promptString",
-			"description": "Path to your TalentExtractor.lua file",
-			"default": "TalentExtractor.lua"
+			"description": "Path to your TalentScout.lua file",
+			"default": "TalentScout.lua"
 		}
 	]
 }
