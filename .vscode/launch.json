@@ -2,96 +2,68 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Parse Classic talents",
+			"name": "Generate all providers",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "${workspaceFolder}/scribe.py",
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"args": []
+		},
+		{
+			"name": "Generate Classic provider",
 			"type": "debugpy",
 			"request": "launch",
 			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "ProviderClassic.lua",
-				"${input:rawTalentFile}",
+				"Vanilla"
 			]
 		},
 		{
-			"name": "Parse Forever talents",
+			"name": "Generate Forever provider",
 			"type": "debugpy",
 			"request": "launch",
 			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "ProviderForever.lua",
-				"${input:rawTalentFile}",
+				"Forever"
 			]
 		},
 		{
-			"name": "Parse TBC talents",
+			"name": "Generate TBC provider",
 			"type": "debugpy",
 			"request": "launch",
 			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "ProviderTBC.lua",
-				"${input:rawTalentFile}",
+				"TBC"
 			]
 		},
 		{
-			"name": "Parse Wrath talents",
+			"name": "Generate Mists provider",
 			"type": "debugpy",
 			"request": "launch",
 			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "ProviderWrath.lua",
-				"${input:rawTalentFile}",
+				"Mists"
 			]
 		},
 		{
-			"name": "Parse Cata talents",
+			"name": "Generate Retail provider",
 			"type": "debugpy",
 			"request": "launch",
 			"program": "${workspaceFolder}/scribe.py",
 			"cwd": "${workspaceFolder}",
 			"console": "integratedTerminal",
 			"args": [
-				"--output", "ProviderCata.lua",
-				"${input:rawTalentFile}",
+				"Standard"
 			]
-		},
-		{
-			"name": "Parse Mists talents",
-			"type": "debugpy",
-			"request": "launch",
-			"program": "${workspaceFolder}/scribe.py",
-			"cwd": "${workspaceFolder}",
-			"console": "integratedTerminal",
-			"args": [
-				"--output", "ProviderMists.lua",
-				"${input:rawTalentFile}",
-			]
-		},
-		{
-			"name": "Parse Retail talents",
-			"type": "debugpy",
-			"request": "launch",
-			"program": "${workspaceFolder}/scribe.py",
-			"cwd": "${workspaceFolder}",
-			"console": "integratedTerminal",
-			"args": [
-				"--output", "ProviderStandard.lua",
-				"${input:rawTalentFile}",
-			]
-		}
-	],
-	"inputs": [
-		{
-			"id": "rawTalentFile",
-			"type": "promptString",
-			"description": "Path to your TalentScout.lua file",
-			"default": "TalentScout.lua"
 		}
 	]
 }
