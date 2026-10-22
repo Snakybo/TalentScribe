@@ -60,8 +60,9 @@ VERSIONS: dict[str, GameVersion] = {
 	"Standard": GameVersion("wow", 120000, 130000, TalentSystem.TRAITS),
 }
 
-# Placeholder talent that occupies unused slots in the Mists talent grid
 DUMMY_TALENT_SPELL_ID = 102052
+RACE_FLAG_NOT_PLAYABLE = 0x1
+INITIAL_SPECIALIZATION_INDEX = 4
 
 Row = dict[str, str]
 
@@ -70,6 +71,7 @@ class Specialization:
 	index: int
 	id: int
 	icon: int | None
+	initial: bool = False
 
 @dataclass
 class Talent:
@@ -81,6 +83,7 @@ class Talent:
 class Provider:
 	version: GameVersion
 	build: int
+	races: dict[int, str] = field(default_factory=dict[int, str])
 	classes: dict[str, int] = field(default_factory=dict[str, int])
 	specializations: dict[int, list[Specialization]] = field(default_factory=dict[int, list[Specialization]])
 	talents: dict[int, list[Talent]] = field(default_factory=dict[int, list[Talent]])
@@ -151,8 +154,14 @@ def make_talent(talent_id: int, spell_id: int, icons: dict[int, int]) -> Talent:
 	return Talent(talent_id, spell_id, icons.get(spell_id) or None)
 
 def load_classes(wago: Wago) -> dict[int, str]:
-	# Non-playable classes (e.g. Adventurer in Retail) have no roles
 	return {to_int(row["ID"]): row["Filename"].upper() for row in wago.table("ChrClasses") if to_int(row["RolesMask"]) != 0}
+
+def load_races(wago: Wago) -> dict[int, str]:
+    return {
+        to_int(row["ID"]): row["ClientFileString"]
+        for row in wago.table("ChrRaces")
+        if to_int(row["PlayableRaceBit"]) >= 0 and not to_int(row["Flags"]) & RACE_FLAG_NOT_PLAYABLE
+    }
 
 def load_talent_tabs(wago: Wago, provider: Provider, classes: dict[int, str], icons: dict[int, int]):
 	tabs = [row for row in wago.table("TalentTab") if to_int(row["ClassMask"]) != 0]
@@ -182,8 +191,9 @@ def load_specializations(wago: Wago, provider: Provider, classes: dict[int, str]
 	for row in wago.table("ChrSpecialization"):
 		class_id = to_int(row["ClassID"])
 		if class_id in classes:
+			order_index = to_int(row["OrderIndex"])
 			provider.specializations.setdefault(class_id, []).append(
-				Specialization(to_int(row["OrderIndex"]) + 1, to_int(row["ID"]), to_int(row["SpellIconFileID"]) or None)
+				Specialization(order_index + 1, to_int(row["ID"]), to_int(row["SpellIconFileID"]) or None, order_index == INITIAL_SPECIALIZATION_INDEX)
 			)
 
 def load_tiered_talents(wago: Wago, provider: Provider, icons: dict[int, int]):
@@ -215,6 +225,7 @@ def load_pvp_talents(wago: Wago, provider: Provider, icons: dict[int, int]):
 def build_provider(version: GameVersion, build: str | None, cache_dir: Path | None) -> Provider:
 	wago = Wago(version.product, build, cache_dir)
 	provider = Provider(version, int(wago.build.split(".")[-1]))
+	provider.races = load_races(wago)
 	classes = load_classes(wago)
 	icons = spell_icons(wago)
 
@@ -243,6 +254,11 @@ def talents_to_lua(talents: dict[int, list[Talent]]) -> str:
 def provider_to_lua(provider: Provider) -> str:
 	version = provider.version
 
+	races = lua_table([
+        f"[{race_id}] = {to_lua(name)}"
+        for race_id, name in sorted(provider.races.items())
+    ], 1)
+
 	classes = lua_table([
 		f"[{to_lua(name)}] = {class_id}"
 		for name, class_id in sorted(provider.classes.items(), key=lambda c: c[1])
@@ -250,7 +266,7 @@ def provider_to_lua(provider: Provider) -> str:
 
 	specializations = lua_table([
 		f"[{class_id}] = " + lua_table([
-			f"[{s.index}] = {{ id = {s.id}, icon = {to_lua(s.icon)} }}"
+			f"[{s.index}] = {{ id = {s.id}, icon = {to_lua(s.icon)}{', initial = true' if s.initial else ''} }}"
 			for s in sorted(provider.specializations[class_id], key=lambda s: s.index)
 		], 2)
 		for class_id in sorted(provider.specializations)
@@ -264,6 +280,7 @@ end
 --- @type LibTalentTome.Provider
 LibTalentTome:SetProvider({{
 	build = {provider.build},
+	races = {races},
 	classes = {classes},
 	specializations = {specializations},
 	talents = {talents_to_lua(provider.talents)},

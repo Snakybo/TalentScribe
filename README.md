@@ -1,6 +1,6 @@
 # TalentScribe
 
-A Python script that fetches WoW class, spec, talent, and pvp talent data from [wago.tools](https://wago.tools), and formats it neatly in a library structure.
+A Python script that fetches WoW race, class, spec, talent, and pvp talent data from [wago.tools](https://wago.tools), and formats it neatly in a library structure.
 
 This is the data gathering and formatting tool for the [LibTalentTome](https://github.com/Snakybo/LibTalentTome) WoW library.
 
