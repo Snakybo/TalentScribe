@@ -41,8 +41,8 @@ local _, _, _, interfaceVersion = GetBuildInfo()
 """
 
 class TalentSystem(Enum):
-	TALENT_TABS = "tabs"
-	SPECIALIZATIONS = "specializations"
+	TABS = "tabs"
+	TIERS = "tiers"
 	TRAITS = "traits"
 
 @dataclass(frozen=True)
@@ -53,10 +53,10 @@ class GameVersion:
 	talent_system: TalentSystem
 
 VERSIONS: dict[str, GameVersion] = {
-	"Vanilla": GameVersion("wow_classic_era", 11300, 16000, TalentSystem.TALENT_TABS),
+	"Vanilla": GameVersion("wow_classic_era", 11300, 16000, TalentSystem.TABS),
 	"Forever": GameVersion("wowf", 16000, 20000, TalentSystem.TRAITS),
-	"TBC": GameVersion("wow_anniversary", 20505, 30000, TalentSystem.TALENT_TABS),
-	"Mists": GameVersion("wow_classic", 50500, 60000, TalentSystem.SPECIALIZATIONS),
+	"TBC": GameVersion("wow_anniversary", 20505, 30000, TalentSystem.TABS),
+	"Mists": GameVersion("wow_classic", 50500, 60000, TalentSystem.TIERS),
 	"Standard": GameVersion("wow", 120000, 130000, TalentSystem.TRAITS),
 }
 
@@ -229,11 +229,11 @@ def build_provider(version: GameVersion, build: str | None, cache_dir: Path | No
 	classes = load_classes(wago)
 	icons = spell_icons(wago)
 
-	if version.talent_system == TalentSystem.TALENT_TABS:
+	if version.talent_system == TalentSystem.TABS:
 		load_talent_tabs(wago, provider, classes, icons)
 	else:
 		load_specializations(wago, provider, classes)
-		if version.talent_system == TalentSystem.SPECIALIZATIONS:
+		if version.talent_system == TalentSystem.TIERS:
 			load_tiered_talents(wago, provider, icons)
 
 	provider.classes = {classes[class_id]: class_id for class_id in provider.specializations}
@@ -280,6 +280,7 @@ end
 --- @type LibTalentTome.Provider
 LibTalentTome:SetProvider({{
 	build = {provider.build},
+	talentSystem = "{version.talent_system.value}",
 	races = {races},
 	classes = {classes},
 	specializations = {specializations},
